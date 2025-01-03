@@ -42,12 +42,22 @@ class Dashboard extends StatelessWidget {
                       SizedBox(
                         height: height * 0.05,
                         width: width * 0.4,
-                        child: const Center(
-                          child: Text(
-                            "Arham Bajwa",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                            ),
+                        child: Center(
+                          child: BlocBuilder<AuthBlocBloc, AuthBlocState>(
+                            builder: (context, state) {
+                              if (state is UserDataLoadingState) {
+                                return const CircularProgressIndicator();
+                              } else if (state is UserDataLoadedState) {
+                                return Text(
+                                  'Welcome ${state.userName}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              } else {
+                                return const Text('unable to fetch user');
+                              }
+                            },
                           ),
                         ),
                       ),

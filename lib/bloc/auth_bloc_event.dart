@@ -21,3 +21,8 @@ class SignInRequestEvent extends AuthBlocEvent {
 class LogOutEvent extends AuthBlocEvent {}
 
 class AppStartupEvent extends AuthBlocEvent {}
+
+class FetchUserDataEvent extends AuthBlocEvent {
+  final String uid;
+  FetchUserDataEvent({required this.uid});
+}
