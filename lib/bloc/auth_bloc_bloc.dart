@@ -94,5 +94,16 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         emit(AuthBlocErrorState(error: 'signOut failed: $e'));
       }
     });
+
+    on<FetchUserDataEvent>((event, emit) async {
+      emit(UserDataLoadingState());
+      try {
+        final userData = await firestoreService.getUserData(event.uid);
+        final userName = userData['name'] as String;
+        emit(UserDataLoadedState(userName: userName));
+      } catch (e) {
+        emit(UserDataErrorState(error: '$e'));
+      }
+    });
   }
 }
