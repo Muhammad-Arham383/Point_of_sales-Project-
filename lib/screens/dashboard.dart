@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
@@ -17,10 +16,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (uid.isNotEmpty) {
-      context.read<AuthBlocBloc>().add(FetchUserDataEvent(uid: uid));
-    }
   }
 
   @override
