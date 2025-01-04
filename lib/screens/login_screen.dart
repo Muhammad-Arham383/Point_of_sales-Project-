@@ -20,6 +20,14 @@ class LoginScreen extends StatelessWidget {
     void signInUser() {
       context.read<AuthBlocBloc>().add(SignInRequestEvent(
           email: emailController.text, password: passwordController.text));
+      try {
+        final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+        if (uid.isNotEmpty) {
+          context.read<AuthBlocBloc>().add(FetchUserDataEvent(uid: uid));
+        }
+      } catch (e) {
+        Text('unable to fetch user $e');
+      }
     }
 
     return BlocBuilder<AuthBlocBloc, AuthBlocState>(
