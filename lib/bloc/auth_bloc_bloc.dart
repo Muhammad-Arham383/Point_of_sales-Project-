@@ -97,12 +97,14 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
 
     on<FetchUserDataEvent>((event, emit) async {
       emit(UserDataLoadingState());
+      print("Fetching user data for UID: ${event.uid}");
       try {
         final userData = await firestoreService.getUserData(event.uid);
         final userName = userData['name'] as String;
         emit(UserDataLoadedState(userName: userName));
       } catch (e) {
-        emit(UserDataErrorState(error: '$e'));
+        print("Error: $e");
+        emit(UserDataErrorState(error: e.toString()));
       }
     });
   }
