@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:pos_project/services/firestore_services.dart';
-
 part 'user_data_event.dart';
 part 'user_data_state.dart';
 
