@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
+import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/sign_up_screen.dart';
 import 'package:pos_project/services/firestore_services.dart';
 import 'firebase_options.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<InventoryBloc>(
           create: (context) => InventoryBloc(firestoreService),
         ),
+        BlocProvider(
+            create: (context) =>
+                UserDataBloc(firestoreService: firestoreService))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -60,6 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     context.read<AuthBlocBloc>().add(AppStartupEvent());
+
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+      if (uid.isNotEmpty) {
+        context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
+      }
+    } catch (e) {
+      print('Error fetching user: ${e.toString()}');
+    }
   }
 
   @override
