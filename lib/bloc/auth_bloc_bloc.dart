@@ -103,7 +103,8 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         final userName = userData['name'] as String;
         emit(UserDataLoadedState(userName: userName));
       } catch (e) {
-        print("Error: $e");
+        print('Error fetching user: ${e.toString()}');
+
         emit(UserDataErrorState(error: e.toString()));
       }
     });

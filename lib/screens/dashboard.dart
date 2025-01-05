@@ -132,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
                       blurRadius: 20),
                 ],
                 borderRadius: BorderRadius.all(Radius.circular(12)),
-                color: Color.fromARGB(255, 66, 120, 146),
+                color: Color.fromARGB(255, 3, 209, 255),
               ),
               padding: EdgeInsets.all(9),
               width: width * 0.4,
