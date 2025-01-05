@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
+import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/inventory.dart';
 import 'package:pos_project/screens/sales_screen.dart';
 import 'package:pos_project/widgets/image_picker_circle_avatar.dart';
@@ -48,7 +49,7 @@ class _DashboardState extends State<Dashboard> {
                         height: height * 0.05,
                         width: width * 0.4,
                         child: Center(
-                          child: BlocBuilder<AuthBlocBloc, AuthBlocState>(
+                          child: BlocBuilder<UserDataBloc, UserDataState>(
                             builder: (context, state) {
                               if (state is UserDataLoadingState) {
                                 return const CircularProgressIndicator();

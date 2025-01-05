@@ -58,10 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthBlocBloc>().add(AppStartupEvent());
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
-    context.read<AuthBlocBloc>().add(FetchUserDataEvent(uid: uid));
+    context.read<AuthBlocBloc>().add(AppStartupEvent());
   }
 
   @override
