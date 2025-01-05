@@ -41,7 +41,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   bloc: ^8.1.4
   meta: ^1.15.0
-  shared_preferences: ^2.3.4
+  shared_preferences: ^2.3.5
   image_picker: ^1.1.2
   animated_text_kit: ^4.2.2
   google_api_availability: ^5.0.0
