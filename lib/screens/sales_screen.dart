@@ -46,6 +46,10 @@ class _SalesScreenState extends State<SalesScreen> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (builder) => SalesScreen()));
+        }),
         backgroundColor: Colors.lightBlue.shade200,
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 41, 121, 255),

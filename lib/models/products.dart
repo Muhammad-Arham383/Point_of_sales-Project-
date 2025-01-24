@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Products {
-  String productName;
-  String productCategory;
-  int stockQuantity;
-  double price;
+  final String productName;
+  final String productCategory;
+  final int stockQuantity;
+  final double price;
   Products({
     required this.productName,
     required this.productCategory,
@@ -52,7 +52,7 @@ class Products {
     return Products(
         productName: data['productName'],
         productCategory: data["productCategory"],
-        stockQuantity: data['stockQuantity'],
+        stockQuantity: data['stockQuantity'] ?? 0,
         price: data["price"]);
   }
   String toJson() => json.encode(toMap());

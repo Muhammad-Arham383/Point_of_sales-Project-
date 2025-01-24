@@ -24,8 +24,14 @@ class SignUpScreen extends StatelessWidget {
           name: _nameController.text,
           email: _emailController.text,
           password: _passwordController.text));
-      final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-      context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
+      try {
+        final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+        if (uid.isNotEmpty) {
+          context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
+        }
+      } catch (e) {
+        Text('Error fetching user: ${e.toString()}');
+      }
     }
 
     return BlocBuilder<AuthBlocBloc, AuthBlocState>(
