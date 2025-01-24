@@ -55,7 +55,7 @@ class _InventoryState extends State<Inventory> {
                       productName: product.productName,
                       productCategory: product.productCategory,
                       stockQuantity: product.stockQuantity,
-                      price: product.price.toString()),
+                      price: product.price),
                 );
               });
         } else if (state is InventoryErrorState) {

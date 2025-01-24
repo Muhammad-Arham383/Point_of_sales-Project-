@@ -48,7 +48,7 @@ class _InventoryManagementState extends State<InventoryManagement> {
         Products product = Products(
           productName: _productName.text,
           productCategory: _category.text,
-          stockQuantity: _stock.text,
+          stockQuantity: int.parse(_stock.text),
           price: double.parse(_price.text),
         );
         context.read<InventoryBloc>().add(

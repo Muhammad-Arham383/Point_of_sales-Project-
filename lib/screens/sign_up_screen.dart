@@ -1,7 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
+import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/login_screen.dart';
 import 'package:pos_project/widgets/buttons.dart';
 import 'package:pos_project/widgets/textfields.dart';
@@ -22,6 +24,8 @@ class SignUpScreen extends StatelessWidget {
           name: _nameController.text,
           email: _emailController.text,
           password: _passwordController.text));
+      final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+      context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
     }
 
     return BlocBuilder<AuthBlocBloc, AuthBlocState>(

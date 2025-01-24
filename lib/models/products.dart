@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Products {
   String productName;
   String productCategory;
-  String stockQuantity;
+  int stockQuantity;
   double price;
   Products({
     required this.productName,
@@ -18,7 +18,7 @@ class Products {
   Products copyWith({
     String? productName,
     String? productCategory,
-    String? stockQuantity,
+    int? stockQuantity,
     double? price,
   }) {
     return Products(
@@ -42,7 +42,7 @@ class Products {
     return Products(
       productName: map['productName'] as String,
       productCategory: map['productCategory'] as String,
-      stockQuantity: map['stockQuantity'] as String,
+      stockQuantity: map['stockQuantity'] as int,
       price: map['price'] as double,
     );
   }

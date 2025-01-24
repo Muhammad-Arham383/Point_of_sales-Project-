@@ -13,8 +13,8 @@ class ListTileContainer extends StatelessWidget {
 
   final String productName;
   final String productCategory;
-  final String price;
-  final String stockQuantity;
+  final double price;
+  final int stockQuantity;
 
   @override
   Widget build(BuildContext context) {
