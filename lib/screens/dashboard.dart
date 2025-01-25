@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
 import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/inventory.dart';
-import 'package:pos_project/screens/sales_screen.dart';
+import 'package:pos_project/screens/sales_report.dart';
 import 'package:pos_project/widgets/image_picker_circle_avatar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -105,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SalesScreen()));
+                          builder: (context) => const SalesReport()));
                 },
               ),
               ListTile(

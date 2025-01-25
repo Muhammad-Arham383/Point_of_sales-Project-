@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
+import 'package:pos_project/screens/sales_screen.dart';
 import 'package:pos_project/widgets/containerListTile.dart';
 
 class SalesReport extends StatelessWidget {
@@ -11,7 +12,10 @@ class SalesReport extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (builder) => const SalesScreen()));
+        },
         child: const Icon(Icons.add),
       ),
       body:

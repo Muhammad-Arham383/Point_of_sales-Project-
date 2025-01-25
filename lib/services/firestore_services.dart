@@ -59,7 +59,8 @@ class FirestoreService {
         return Products(
           productName: data['productName'] ?? '',
           productCategory: data['productCategory'] ?? '',
-          stockQuantity: data['stockQuantity'] ?? '',
+          stockQuantity:
+              int.tryParse(data['stockQuantity']?.toString() ?? '') ?? 0,
           price: data['price'] ?? '',
         );
       }).toList();
@@ -79,10 +80,17 @@ class FirestoreService {
       if (querySnapshot.docs.isNotEmpty) {
         final doc = querySnapshot.docs.first;
         final data = doc.data();
+        for (var doc in querySnapshot.docs) {
+          if (data['stockQuantity'] is String) {
+            int quantity = int.tryParse(data['stockQuantity']) ?? 0;
+            await doc.reference.update({'stockQuantity': quantity});
+          }
+        }
         return Products(
           productName: data['productName'] ?? '',
           price: data['price'] ?? 0,
-          stockQuantity: data['stockQuantity'] ?? '',
+          stockQuantity:
+              int.tryParse(data['stockQuantity']?.toString() ?? '') ?? 0,
           productCategory: data['productCategory'] ?? '',
         );
       }

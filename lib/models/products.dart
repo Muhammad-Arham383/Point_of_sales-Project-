@@ -33,7 +33,7 @@ class Products {
     return <String, dynamic>{
       'productName': productName,
       'productCategory': productCategory,
-      'stock': stockQuantity,
+      'stockQuantity': stockQuantity,
       'price': price,
     };
   }
@@ -52,7 +52,7 @@ class Products {
     return Products(
         productName: data['productName'],
         productCategory: data["productCategory"],
-        stockQuantity: data['stockQuantity'] ?? 0,
+        stockQuantity: data['stockQuantity'],
         price: data["price"]);
   }
   String toJson() => json.encode(toMap());
@@ -62,7 +62,7 @@ class Products {
 
   @override
   String toString() {
-    return 'Products(productName: $productName, productCategory: $productCategory, stock: $stockQuantity, price: $price)';
+    return 'Products(productName: $productName, productCategory: $productCategory, stockQuantity: $stockQuantity, price: $price)';
   }
 
   @override
