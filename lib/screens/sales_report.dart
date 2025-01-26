@@ -31,6 +31,7 @@ class SalesReport extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(9.0),
                   child: ListTileContainer(
+                      onPressed: () {},
                       productName: product.productName,
                       productCategory: product.productCategory,
                       stockQuantity: product.stockQuantity,

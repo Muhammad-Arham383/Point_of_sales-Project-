@@ -31,6 +31,13 @@ final class UpdateQuantityEvent extends InventoryEvent {
   final int quantity;
 }
 
+class DeleteProductEvent extends InventoryEvent {
+  final String userId;
+  final String? productId;
+
+  DeleteProductEvent({required this.userId, required this.productId});
+}
+
 final class FetchProductByNameEvent extends InventoryEvent {
   FetchProductByNameEvent(
       {required this.productName, required this.price, required this.uid});

@@ -28,6 +28,8 @@ final class ProductByNameLoadedState extends InventoryState {
   }
 }
 
+class ProductDeletedState extends InventoryState {}
+
 final class InventoryErrorState extends InventoryState {
   InventoryErrorState({required this.errorMessage});
   final String errorMessage;

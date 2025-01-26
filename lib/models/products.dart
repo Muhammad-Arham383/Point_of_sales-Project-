@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Products {
+  final String? productId;
   final String productName;
   final String productCategory;
   final int stockQuantity;
   final double price;
   Products({
+    this.productId,
     required this.productName,
     required this.productCategory,
     required this.stockQuantity,
@@ -22,6 +24,7 @@ class Products {
     double? price,
   }) {
     return Products(
+      productId: productId,
       productName: productName ?? this.productName,
       productCategory: productCategory ?? this.productCategory,
       stockQuantity: stockQuantity ?? this.stockQuantity,
@@ -40,6 +43,7 @@ class Products {
 
   factory Products.fromMap(Map<String, dynamic> map) {
     return Products(
+      productId: map['productId'] as String,
       productName: map['productName'] as String,
       productCategory: map['productCategory'] as String,
       stockQuantity: map['stockQuantity'] as int,
@@ -50,6 +54,7 @@ class Products {
   factory Products.fromFirestore(DocumentSnapshot docs) {
     final data = docs.data as Map<String, dynamic>;
     return Products(
+        productId: docs.id,
         productName: data['productName'],
         productCategory: data["productCategory"],
         stockQuantity: data['stockQuantity'],

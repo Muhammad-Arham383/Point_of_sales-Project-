@@ -52,19 +52,33 @@ class _InventoryState extends State<Inventory> {
                 return Padding(
                   padding: const EdgeInsets.all(9.0),
                   child: ListTileContainer(
-                      productName: product.productName,
-                      productCategory: product.productCategory,
-                      stockQuantity: product.stockQuantity,
-                      price: product.price),
+                    productName: product.productName,
+                    productCategory: product.productCategory,
+                    stockQuantity: product.stockQuantity,
+                    price: product.price,
+                    onPressed: () {
+                      final userId =
+                          FirebaseAuth.instance.currentUser?.uid ?? '';
+                      context.read<InventoryBloc>().add(
+                            DeleteProductEvent(
+                              userId: userId, // The current logged-in user's ID
+                              productId: product
+                                  .productId, // Firestore document ID of the product
+                            ),
+                          );
+                    },
+                  ),
                 );
               });
         } else if (state is InventoryErrorState) {
           return Center(
             child: Text(state.errorMessage),
           );
-        } else {
-          return const Center(child: Text('no Product found'));
+        } else if (state is ProductDeletedState) {
+          return Text('Product deleted successfully');
         }
+
+        return const Center(child: Text('no Product found'));
       }),
     );
   }
