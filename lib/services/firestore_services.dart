@@ -57,6 +57,7 @@ class FirestoreService {
       return querySnapshot.docs.map((doc) {
         var data = doc.data() as Map<String, dynamic>;
         return Products(
+          productId: data['productId'],
           productName: data['productName'] ?? '',
           productCategory: data['productCategory'] ?? '',
           stockQuantity:
@@ -66,6 +67,18 @@ class FirestoreService {
       }).toList();
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<void> deleteProducts(String uid, String? productId) async {
+    try {
+      await userCollection
+          .doc(uid)
+          .collection(productsCollection)
+          .doc(productId)
+          .delete();
+    } catch (e) {
+      Exception(e);
     }
   }
 
@@ -87,6 +100,7 @@ class FirestoreService {
           }
         }
         return Products(
+          productId: data['productId'],
           productName: data['productName'] ?? '',
           price: data['price'] ?? 0,
           stockQuantity:

@@ -8,6 +8,7 @@ class ListTileContainer extends StatelessWidget {
     required this.productCategory,
     required this.stockQuantity,
     required this.price,
+    required this.onPressed,
     super.key,
   });
 
@@ -15,6 +16,7 @@ class ListTileContainer extends StatelessWidget {
   final String productCategory;
   final double price;
   final int stockQuantity;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +91,10 @@ class ListTileContainer extends StatelessWidget {
                                 color: Colors.black),
                           ),
                         ),
+                        Center(
+                          child: IconButton(
+                              icon: Icon(Icons.delete), onPressed: onPressed),
+                        )
                       ],
                     ),
                   )
