@@ -66,6 +66,8 @@ class _InventoryState extends State<Inventory> {
                                   .productId, // Firestore document ID of the product
                             ),
                           );
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('deleted successfully')));
                     },
                   ),
                 );
@@ -75,7 +77,7 @@ class _InventoryState extends State<Inventory> {
             child: Text(state.errorMessage),
           );
         } else if (state is ProductDeletedState) {
-          return Text('Product deleted successfully');
+          return const Text('Product deleted successfully');
         }
 
         return const Center(child: Text('no Product found'));

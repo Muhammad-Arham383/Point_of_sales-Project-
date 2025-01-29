@@ -33,7 +33,7 @@ final class UpdateQuantityEvent extends InventoryEvent {
 
 class DeleteProductEvent extends InventoryEvent {
   final String userId;
-  final String? productId;
+  final String productId;
 
   DeleteProductEvent({required this.userId, required this.productId});
 }

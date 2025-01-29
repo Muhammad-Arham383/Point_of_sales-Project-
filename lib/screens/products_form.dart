@@ -46,6 +46,7 @@ class _InventoryManagementState extends State<InventoryManagement> {
 
         // Create a new product instance
         Products product = Products(
+          productId: '',
           productName: _productName.text,
           productCategory: _category.text,
           stockQuantity: int.parse(_stock.text),

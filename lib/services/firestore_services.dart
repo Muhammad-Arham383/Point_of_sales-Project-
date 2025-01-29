@@ -39,10 +39,16 @@ class FirestoreService {
 
   Future<bool> addProduct(String userId, Products products) async {
     try {
-      await userCollection
+      DocumentReference docRef = await userCollection
           .doc(userId)
           .collection(productsCollection)
           .add(products.toMap());
+
+      String productId = docRef.id; // Get the generated ID
+
+      // Update the document to store the productId inside Firestore
+      await docRef.update({'productId': productId});
+
       return true;
     } catch (e) {
       print("Error adding product: $e");
@@ -57,7 +63,7 @@ class FirestoreService {
       return querySnapshot.docs.map((doc) {
         var data = doc.data() as Map<String, dynamic>;
         return Products(
-          productId: data['productId'],
+          productId: doc.id,
           productName: data['productName'] ?? '',
           productCategory: data['productCategory'] ?? '',
           stockQuantity:

@@ -93,7 +93,8 @@ class ListTileContainer extends StatelessWidget {
                         ),
                         Center(
                           child: IconButton(
-                              icon: Icon(Icons.delete), onPressed: onPressed),
+                              icon: const Icon(Icons.delete),
+                              onPressed: onPressed),
                         )
                       ],
                     ),
