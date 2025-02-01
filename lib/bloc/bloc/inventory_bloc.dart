@@ -40,7 +40,6 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
     });
 
     on<DeleteProductEvent>((event, emit) async {
-      emit(InventoryLoadingState());
       try {
         await firestoreService.deleteProducts(event.userId, event.productId);
         if (state is InventoryLoadedState) {

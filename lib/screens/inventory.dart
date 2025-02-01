@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
+import 'package:pos_project/screens/cart.dart';
 import 'package:pos_project/screens/products_form.dart';
 import 'package:pos_project/widgets/containerListTile.dart';
 
@@ -18,6 +20,71 @@ class _InventoryState extends State<Inventory> {
     super.initState();
     final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     context.read<InventoryBloc>().add(ProductsFetchEvent(userId: userId));
+  }
+
+  void showCart(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            if (state.cartItems.isEmpty) {
+              return Container(
+                padding: EdgeInsets.all(16),
+                child: Text("Your cart is empty"),
+              );
+            }
+            return Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...state.cartItems.values.map((item) => ListTile(
+                        title: Text(item.productName),
+                        subtitle: Text(
+                            "Price: \$${item.price} x ${item.stockQuantity}"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                if (item.stockQuantity > 1) {
+                                  context.read<CartBloc>().add(
+                                        UpdateProductQuantity(item.productId,
+                                            item.stockQuantity - 1),
+                                      );
+                                }
+                              },
+                            ),
+                            Text(item.stockQuantity.toString()),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                context.read<CartBloc>().add(
+                                      UpdateProductQuantity(item.productId,
+                                          item.stockQuantity + 1),
+                                    );
+                              },
+                            ),
+                          ],
+                        ),
+                      )),
+                  Text("Total: \$${state.totalPrice}"),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<CartBloc>().add(ConfirmPurchase());
+                      Navigator.pop(context); // Close the bottom sheet
+                    },
+                    child: const Text("Confirm Purchase"),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -49,9 +116,24 @@ class _InventoryState extends State<Inventory> {
               itemCount: state.products.length,
               itemBuilder: (context, index) {
                 final product = state.products[index];
+                final isSelected = context
+                    .watch<CartBloc>()
+                    .state
+                    .cartItems
+                    .containsKey(product.productId);
                 return Padding(
                   padding: const EdgeInsets.all(9.0),
                   child: ListTileContainer(
+                    icon: isSelected
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: isSelected ? Colors.lightBlue : null,
+                    onTap: () {
+                      context
+                          .read<CartBloc>()
+                          .add(ToggleProductSelection(product));
+                      showCart(context);
+                    },
                     productName: product.productName,
                     productCategory: product.productCategory,
                     stockQuantity: product.stockQuantity,

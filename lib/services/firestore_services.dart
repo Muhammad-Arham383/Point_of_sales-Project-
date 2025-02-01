@@ -88,6 +88,20 @@ class FirestoreService {
     }
   }
 
+  Future<void> reduceProductQuantity(
+      String uid, String productId, int quantityToReduce) async {
+    try {
+      await userCollection
+          .doc(uid)
+          .collection(productsCollection)
+          .doc(productId)
+          .update({'stockQuantity': FieldValue.increment(-quantityToReduce)});
+    } catch (e) {
+      // Optionally log the error or rethrow with a custom message
+      throw Exception("Failed to update product quantity for $productId: $e");
+    }
+  }
+
   Future<Products?> fetchProductByName(String productName, String uid) async {
     try {
       final querySnapshot = await userCollection

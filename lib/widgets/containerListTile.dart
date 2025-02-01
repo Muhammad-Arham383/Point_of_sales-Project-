@@ -9,6 +9,9 @@ class ListTileContainer extends StatelessWidget {
     required this.stockQuantity,
     required this.price,
     required this.onPressed,
+    required this.icon,
+    required this.color,
+    required this.onTap,
     super.key,
   });
 
@@ -17,6 +20,9 @@ class ListTileContainer extends StatelessWidget {
   final double price;
   final int stockQuantity;
   final VoidCallback? onPressed;
+  final IconData? icon;
+  final Color? color;
+  final GestureTapCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +101,13 @@ class ListTileContainer extends StatelessWidget {
                           child: IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: onPressed),
-                        )
+                        ),
+                        GestureDetector(
+                            onTap: onTap,
+                            child: Icon(
+                              icon,
+                              color: color,
+                            ))
                       ],
                     ),
                   )

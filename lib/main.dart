@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
+import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
 import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/sign_up_screen.dart';
@@ -35,7 +36,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
             create: (context) =>
-                UserDataBloc(firestoreService: firestoreService))
+                UserDataBloc(firestoreService: firestoreService)),
+        BlocProvider(
+            create: (context) => CartBloc(firestoreService: firestoreService))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
