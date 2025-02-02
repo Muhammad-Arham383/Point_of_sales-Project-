@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 UserDataBloc(firestoreService: firestoreService)),
         BlocProvider(
-            create: (context) => CartBloc(firestoreService: firestoreService))
+            create: (context) => CartBloc(
+                firestoreService: firestoreService,
+                inventoryBloc: context.read<InventoryBloc>()))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

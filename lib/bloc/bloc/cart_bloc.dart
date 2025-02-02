@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
+import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
+import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/models/products.dart';
 import 'package:pos_project/services/firestore_services.dart';
 
@@ -9,7 +11,8 @@ part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final FirestoreService firestoreService;
-  CartBloc({required this.firestoreService})
+  final InventoryBloc inventoryBloc;
+  CartBloc({required this.firestoreService, required this.inventoryBloc})
       : super(CartState(cartItems: const {})) {
     // Select or Deselect Product from Inventory
     on<ToggleProductSelection>((event, emit) {
@@ -50,10 +53,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       for (var item in updatedCart.values) {
         var uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-        await firestoreService.reduceProductQuantity(uid, item.productId, 1);
+        await firestoreService.reduceProductQuantity(
+            uid, item.productId, item.stockQuantity);
       }
 
       emit(CartState(cartItems: const {})); // Clear cart after purchase
+
+      // Dispatch event to refresh inventory in InventoryBloc
+      var uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      inventoryBloc.add(ProductsFetchEvent(userId: uid));
     });
   }
 }

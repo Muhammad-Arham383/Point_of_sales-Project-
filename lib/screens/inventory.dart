@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
-import 'package:pos_project/screens/cart.dart';
+// import 'package:pos_project/screens/cart.dart';
 import 'package:pos_project/screens/products_form.dart';
 import 'package:pos_project/widgets/containerListTile.dart';
 
