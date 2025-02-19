@@ -5,6 +5,7 @@ import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
 // import 'package:pos_project/screens/cart.dart';
 import 'package:pos_project/screens/products_form.dart';
+import 'package:pos_project/screens/receipt.dart';
 import 'package:pos_project/widgets/containerListTile.dart';
 
 class Inventory extends StatefulWidget {
@@ -21,6 +22,26 @@ class _InventoryState extends State<Inventory> {
     final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     context.read<InventoryBloc>().add(ProductsFetchEvent(userId: userId));
   }
+
+  // void showReceipt(BuildContext context) {
+  //   final cartItems =
+  //       context.read<CartBloc>().state.cartItems; // ✅ Get cart items from Bloc
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (context) {
+  //       return ReceiptScreen(
+  //         purchasedProducts: cartItems.values.map((item) {
+  //           return {
+  //             'name': item.productName,
+  //             'price': item.price,
+  //             'quantity': item.stockQuantity,
+  //           };
+  //         }).toList(),
+  //       );
+  //     },
+  //   );
+  // }
 
   void showCart(BuildContext context) {
     showModalBottomSheet(
@@ -74,7 +95,11 @@ class _InventoryState extends State<Inventory> {
                   ElevatedButton(
                     onPressed: () {
                       context.read<CartBloc>().add(ConfirmPurchase());
-                      Navigator.pop(context); // Close the bottom sheet
+                      Navigator.pop(context);
+                      Future.delayed(Duration(milliseconds: 500), () {
+                        // showReceipt(context);
+                      });
+                      // Close the bottom sheet
                     },
                     child: const Text("Confirm Purchase"),
                   ),

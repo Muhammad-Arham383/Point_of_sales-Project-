@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
-import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/models/products.dart';
 import 'package:pos_project/services/firestore_services.dart';
 

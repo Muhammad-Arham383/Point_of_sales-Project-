@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pos_project/models/products.dart';
+import 'package:pos_project/models/transaction.dart';
 import 'package:pos_project/models/users.dart';
 
 class FirestoreService {
   static const String collectionName = "Users";
   static const String productsCollection = "Products";
+  static const String transactionCollections = "Transactions";
   static FirestoreService? _firestoreService;
   FirestoreService.internal();
   factory FirestoreService() {
@@ -13,7 +15,8 @@ class FirestoreService {
   final userCollection = FirebaseFirestore.instance.collection(collectionName);
   final productCollection =
       FirebaseFirestore.instance.collection(productsCollection);
-
+  final transactionsCollection =
+      FirebaseFirestore.instance.collection(transactionCollections);
   Future<bool> addUser(Users users, String uid) async {
     try {
       await userCollection.doc(uid).set(users.toMap());
@@ -100,6 +103,20 @@ class FirestoreService {
       // Optionally log the error or rethrow with a custom message
       throw Exception("Failed to update product quantity for $productId: $e");
     }
+  }
+
+  Future<void> storeTransaction(
+      String uid, String productId, Transactions transactions) async {
+    try {
+      final transaction = await userCollection
+          .doc(uid)
+          .collection(productsCollection)
+          .doc(productId)
+          .collection(transactionCollections)
+          .add(transactions.toMap());
+    } catch (e) {
+      print("Error storing transaction: $e");
+    } // Log errors for debugging
   }
 
   Future<Products?> fetchProductByName(String productName, String uid) async {
