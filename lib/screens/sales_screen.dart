@@ -1,8 +1,9 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
-import 'package:pos_project/services/firestore_services.dart';
+import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 
 class SalesScreen extends StatefulWidget {
   const SalesScreen({super.key});
@@ -12,126 +13,48 @@ class SalesScreen extends StatefulWidget {
 }
 
 class _SalesScreenState extends State<SalesScreen> {
-  late TextEditingController _productNameController;
-  late TextEditingController _quantityController;
   @override
   void initState() {
     super.initState();
-    _productNameController = TextEditingController();
-    _quantityController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _productNameController.dispose();
-    _quantityController.dispose();
-    super.dispose();
-  }
-
-  final firestoreService = FirestoreService();
-
-  void _onProductNameChanged() {
-    final productName = _productNameController.text.trim();
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (productName.isNotEmpty) {
-      context.read<InventoryBloc>().add(
-            FetchProductByNameEvent(
-                productName: productName, uid: uid, price: 0.0),
-          );
-    }
+    String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    context.read<CartBloc>().add(
+          FetchTransactions(
+            userId: uid,
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: Colors.lightBlue.shade200,
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 41, 121, 255),
-          centerTitle: true,
-          title: const FittedBox(
-            child: Text(
-              'Purchase Order',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                margin: EdgeInsets.only(top: height * 0.06),
-                width: width * 0.9,
-                height: height * 0.7,
-                decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.white,
-                          offset: Offset(5, 5),
-                          blurRadius: 7),
-                      BoxShadow(
-                          color: Colors.lightBlue,
-                          offset: Offset(-8, -8),
-                          blurRadius: 20)
-                    ],
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(12),
-                    ),
-                    color: Color.fromARGB(255, 161, 213, 237)),
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    Container(
-                      width: width * 0.7,
-                      height: height * 0.06,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(12),
-                          ),
-                          color: Color.fromARGB(255, 41, 121, 255)),
-                      child: const FittedBox(
-                        child: Text(
-                          "Purchase Order",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.6,
-                      child: TextFormField(
-                        controller: _productNameController,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Product Name'),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.6,
-                      child: TextFormField(
-                        onChanged: (value) {
-                          final quantity = int.tryParse(value) ?? 0;
+      appBar: AppBar(title: const Text("Sales History")),
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoaded) {
+            return ListView.builder(
+              itemCount: state.transactions.length,
+              itemBuilder: (context, index) {
+                final transaction = state.transactions[index];
 
-                          context.read<InventoryBloc>().add(
-                                UpdateQuantityEvent(quantity: quantity),
-                              );
-                        },
-                        keyboardType: TextInputType.number,
-                        controller: _quantityController,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(), hintText: 'Quantity'),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: _onProductNameChanged,
-                      child: const Text('Search Product'),
-                    ),
-                  ],
-                ),
-              )),
-        ));
+                return ListTile(
+                  tileColor: Colors
+                      .primaries[Random().nextInt(Colors.primaries.length)],
+                  title: Text(transaction.title),
+                  subtitle: Column(
+                    children: [
+                      Text("Quantity: ${transaction.quantity}"),
+                      Text("Amount: \$${transaction.amount}"),
+                    ],
+                  ),
+                  trailing: Text("Date: ${transaction.date}"),
+                );
+              },
+            );
+          } else {
+            return const Center(child: Text("No sales history found."));
+          }
+        },
+      ),
+    );
   }
 }

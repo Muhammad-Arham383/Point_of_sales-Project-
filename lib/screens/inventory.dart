@@ -5,7 +5,7 @@ import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
 // import 'package:pos_project/screens/cart.dart';
 import 'package:pos_project/screens/products_form.dart';
-import 'package:pos_project/screens/receipt.dart';
+// import 'package:pos_project/screens/receipt.dart';
 import 'package:pos_project/widgets/containerListTile.dart';
 
 class Inventory extends StatefulWidget {

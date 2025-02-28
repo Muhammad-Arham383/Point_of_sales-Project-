@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
 import 'package:pos_project/models/products.dart';
+import 'package:pos_project/models/transaction.dart';
 import 'package:pos_project/services/firestore_services.dart';
 
 part 'cart_event.dart';
@@ -54,6 +55,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         var uid = FirebaseAuth.instance.currentUser?.uid ?? '';
         await firestoreService.reduceProductQuantity(
             uid, item.productId, item.stockQuantity);
+
+        final transaction = Transactions(
+          id: item.productId,
+          title: item.productName,
+          amount: item.price * item.stockQuantity,
+          date: DateTime.now(),
+          quantity: item.stockQuantity,
+        );
+
+        await firestoreService.storeTransaction(
+            uid, item.productId, transaction);
       }
 
       emit(CartState(cartItems: const {})); // Clear cart after purchase
@@ -62,6 +74,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       var uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
       inventoryBloc.add(ProductsFetchEvent(userId: uid));
+    });
+
+    on<FetchTransactions>((event, emit) async {
+      try {
+        final transactions = await firestoreService.fetchTransactions(
+          event.userId,
+        );
+
+        emit(CartLoaded(transactions: transactions, cartItems: {}));
+      } catch (e) {
+        print("Error in FetchTransactions: $e");
+        emit(CartError(message: e.toString(), cartItems: {}));
+      }
     });
   }
 }

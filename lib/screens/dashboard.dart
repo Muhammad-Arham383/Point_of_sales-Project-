@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
 import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/inventory.dart';
+import 'package:pos_project/screens/sales_screen.dart';
 // import 'package:pos_project/screens/sales_report.dart';
 import 'package:pos_project/widgets/image_picker_circle_avatar.dart';
 
@@ -98,15 +99,15 @@ class _DashboardState extends State<Dashboard> {
                 leading: const Icon(Icons.receipt_long_sharp),
                 onTap: () {},
               ),
-              const ListTile(
-                title: Text('Sales'),
-                leading: Icon(Icons.point_of_sale_sharp),
-                // onTap: () {
-                //   Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const SalesReport()));
-                // },
+              ListTile(
+                title: const Text('Sales'),
+                leading: const Icon(Icons.point_of_sale_sharp),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SalesScreen()));
+                },
               ),
               ListTile(
                 title: const Text('log out'),

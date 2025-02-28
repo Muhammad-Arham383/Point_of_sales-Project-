@@ -108,15 +108,37 @@ class FirestoreService {
   Future<void> storeTransaction(
       String uid, String productId, Transactions transactions) async {
     try {
-      final transaction = await userCollection
+      await userCollection
           .doc(uid)
           .collection(productsCollection)
           .doc(productId)
           .collection(transactionCollections)
           .add(transactions.toMap());
+      // Store transaction in Firestore
     } catch (e) {
       print("Error storing transaction: $e");
     } // Log errors for debugging
+  }
+
+  Future<List<Transactions>> fetchTransactions(
+    String uid,
+  ) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await userCollection.doc(uid).collection(productsCollection).get();
+      return querySnapshot.docs.map((map) {
+        var data = map.data() as Map<String, dynamic>;
+        return Transactions(
+          id: map.id,
+          title: data['productName'] ?? '',
+          amount: data['price'] ?? 0,
+          quantity: data['stockQuantity'] ?? 0,
+          date: data['date'] ?? DateTime.now(),
+        );
+      }).toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   Future<Products?> fetchProductByName(String productName, String uid) async {

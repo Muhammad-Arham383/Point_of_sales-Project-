@@ -15,3 +15,8 @@ class UpdateProductQuantity extends CartEvent {
 }
 
 class ConfirmPurchase extends CartEvent {}
+
+class FetchTransactions extends CartEvent {
+  final String userId;
+  FetchTransactions({required this.userId});
+}
