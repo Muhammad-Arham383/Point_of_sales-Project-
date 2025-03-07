@@ -37,3 +37,8 @@ final class InventoryErrorState extends InventoryState {
   InventoryErrorState({required this.errorMessage});
   final String errorMessage;
 }
+
+final class ProductUpdatedState extends InventoryState {
+  final Products product;
+  ProductUpdatedState({required this.product});
+}

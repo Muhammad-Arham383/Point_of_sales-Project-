@@ -57,6 +57,15 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
       }
     });
 
+    on<UpdateProductEvent>((event, emit) async {
+      try {
+        await firestoreService.updateProduct(event.userID, event.product);
+        emit(ProductUpdatedState(product: event.product));
+      } catch (e) {
+        emit(InventoryErrorState(errorMessage: 'failed to update product $e'));
+      }
+    });
+
     on<UpdateQuantityEvent>((event, emit) async {
       if (state is ProductByNameLoadedState) {
         final currentState = state as ProductByNameLoadedState;

@@ -38,6 +38,12 @@ class DeleteProductEvent extends InventoryEvent {
   DeleteProductEvent({required this.userId, required this.productId});
 }
 
+class UpdateProductEvent extends InventoryEvent {
+  final Products product;
+  final String userID;
+  UpdateProductEvent({required this.product, required this.userID});
+}
+
 final class FetchProductByNameEvent extends InventoryEvent {
   FetchProductByNameEvent(
       {required this.productName, required this.price, required this.uid});

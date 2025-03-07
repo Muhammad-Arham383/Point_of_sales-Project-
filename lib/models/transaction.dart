@@ -48,7 +48,7 @@ class Transactions {
       title: map['title'] as String,
       amount: map['amount'] as double,
       quantity: map['quantity'] as int,
-      date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+      date: DateTime.fromMillisecondsSinceEpoch(map['date']),
     );
   }
 

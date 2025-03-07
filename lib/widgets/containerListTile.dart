@@ -9,6 +9,7 @@ class ListTileContainer extends StatelessWidget {
     required this.stockQuantity,
     required this.price,
     required this.onPressed,
+    required this.onEditPressed,
     required this.icon,
     required this.color,
     required this.onTap,
@@ -20,6 +21,7 @@ class ListTileContainer extends StatelessWidget {
   final double price;
   final int stockQuantity;
   final VoidCallback? onPressed;
+  final VoidCallback? onEditPressed;
   final IconData? icon;
   final Color? color;
   final GestureTapCallback? onTap;
@@ -97,10 +99,20 @@ class ListTileContainer extends StatelessWidget {
                                 color: Colors.black),
                           ),
                         ),
-                        Center(
-                          child: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: onPressed),
+                        Row(
+                          spacing: width * 0.02,
+                          children: [
+                            Center(
+                              child: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: onPressed),
+                            ),
+                            Center(
+                              child: IconButton(
+                                  icon: const Icon(Icons.edit_note_sharp),
+                                  onPressed: onEditPressed),
+                            ),
+                          ],
                         ),
                         GestureDetector(
                             onTap: onTap,

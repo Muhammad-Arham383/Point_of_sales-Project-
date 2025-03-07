@@ -79,6 +79,18 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateProduct(String uid, Products products) async {
+    try {
+      await userCollection
+          .doc(uid)
+          .collection(productsCollection)
+          .doc(products.productId)
+          .update(products.toMap());
+    } catch (e) {
+      print("Error updating product: $e");
+    }
+  }
+
   Future<void> deleteProducts(String uid, String? productId) async {
     try {
       await userCollection
@@ -110,8 +122,6 @@ class FirestoreService {
     try {
       await userCollection
           .doc(uid)
-          .collection(productsCollection)
-          .doc(productId)
           .collection(transactionCollections)
           .add(transactions.toMap());
       // Store transaction in Firestore
@@ -120,23 +130,29 @@ class FirestoreService {
     } // Log errors for debugging
   }
 
-  Future<List<Transactions>> fetchTransactions(
-    String uid,
-  ) async {
+  Future<List<Transactions>> fetchTransactions(String uid) async {
     try {
-      QuerySnapshot querySnapshot =
-          await userCollection.doc(uid).collection(productsCollection).get();
-      return querySnapshot.docs.map((map) {
-        var data = map.data() as Map<String, dynamic>;
+      QuerySnapshot querySnapshot = await userCollection
+          .doc(uid)
+          .collection(transactionCollections)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+
         return Transactions(
-          id: map.id,
-          title: data['productName'] ?? '',
-          amount: data['price'] ?? 0,
-          quantity: data['stockQuantity'] ?? 0,
-          date: data['date'] ?? DateTime.now(),
+          id: doc.id,
+          title: data['title'] ?? '',
+          amount: data['amount'] ?? 0,
+          quantity: data['quantity'] ?? 0,
+          date: data['date'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(data['date']) // ✅ Fix
+              : DateTime
+                  .now(), // Default value if null ✅ Firestore date handling
         );
       }).toList();
     } catch (e) {
+      print("Error fetching transactions: $e");
       return [];
     }
   }

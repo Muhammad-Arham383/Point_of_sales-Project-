@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
+import 'package:pos_project/models/products.dart';
 // import 'package:pos_project/screens/cart.dart';
 import 'package:pos_project/screens/products_form.dart';
 // import 'package:pos_project/screens/receipt.dart';
 import 'package:pos_project/widgets/containerListTile.dart';
 
 class Inventory extends StatefulWidget {
-  const Inventory({super.key});
+  const Inventory({
+    super.key,
+  });
 
   @override
   State<Inventory> createState() => _InventoryState();
@@ -19,10 +22,18 @@ class _InventoryState extends State<Inventory> {
   @override
   void initState() {
     super.initState();
+    _productName = TextEditingController();
+    _category = TextEditingController();
+    _stock = TextEditingController();
+    _price = TextEditingController();
     final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     context.read<InventoryBloc>().add(ProductsFetchEvent(userId: userId));
   }
 
+  late TextEditingController _productName;
+  late TextEditingController _category;
+  late TextEditingController _stock;
+  late TextEditingController _price;
   // void showReceipt(BuildContext context) {
   //   final cartItems =
   //       context.read<CartBloc>().state.cartItems; // ✅ Get cart items from Bloc
@@ -42,6 +53,77 @@ class _InventoryState extends State<Inventory> {
   //     },
   //   );
   // }
+  void showDialoge(BuildContext context, Products product) {
+    _productName.text = product.productName;
+    _category.text = product.productCategory;
+    _stock.text = product.stockQuantity.toString();
+    _price.text = product.price.toString();
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Edit Product'),
+            content: Column(
+              children: [
+                TextField(
+                  controller: _productName,
+                  decoration: const InputDecoration(
+                    labelText: 'Product Name',
+                  ),
+                ),
+                TextField(
+                  controller: _category,
+                  decoration: const InputDecoration(
+                    labelText: 'Category',
+                  ),
+                ),
+                TextField(
+                  controller: _stock,
+                  decoration: const InputDecoration(
+                    labelText: 'Stock',
+                  ),
+                ),
+                TextField(
+                  controller: _price,
+                  decoration: const InputDecoration(
+                    labelText: 'Price',
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  var userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                  final updatedProduct = Products(
+                    productName: _productName.text,
+                    productCategory: _category.text,
+                    stockQuantity: int.parse(_stock.text),
+                    price: double.parse(_price.text),
+                    productId:
+                        product.productId, // Add the correct productId here
+                  );
+                  context.read<InventoryBloc>().add(
+                        UpdateProductEvent(
+                            product: updatedProduct, userID: userId),
+                      );
+                  context
+                      .read<InventoryBloc>()
+                      .add(ProductsFetchEvent(userId: userId));
+                  Navigator.pop(context);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        });
+  }
 
   void showCart(BuildContext context) {
     showModalBottomSheet(
@@ -51,12 +133,12 @@ class _InventoryState extends State<Inventory> {
           builder: (context, state) {
             if (state.cartItems.isEmpty) {
               return Container(
-                padding: EdgeInsets.all(16),
-                child: Text("Your cart is empty"),
+                padding: const EdgeInsets.all(16),
+                child: const Text("Your cart is empty"),
               );
             }
             return Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -68,7 +150,7 @@ class _InventoryState extends State<Inventory> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               onPressed: () {
                                 if (item.stockQuantity > 1) {
                                   context.read<CartBloc>().add(
@@ -80,7 +162,7 @@ class _InventoryState extends State<Inventory> {
                             ),
                             Text(item.stockQuantity.toString()),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: () {
                                 context.read<CartBloc>().add(
                                       UpdateProductQuantity(item.productId,
@@ -96,7 +178,7 @@ class _InventoryState extends State<Inventory> {
                     onPressed: () {
                       context.read<CartBloc>().add(ConfirmPurchase());
                       Navigator.pop(context);
-                      Future.delayed(Duration(milliseconds: 500), () {
+                      Future.delayed(const Duration(milliseconds: 500), () {
                         // showReceipt(context);
                       });
                       // Close the bottom sheet
@@ -110,6 +192,15 @@ class _InventoryState extends State<Inventory> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _productName.dispose();
+    _category.dispose();
+    _stock.dispose();
+    _price.dispose();
+    super.dispose();
   }
 
   @override
@@ -175,6 +266,9 @@ class _InventoryState extends State<Inventory> {
                           );
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('deleted successfully')));
+                    },
+                    onEditPressed: () {
+                      showDialoge(context, product);
                     },
                   ),
                 );

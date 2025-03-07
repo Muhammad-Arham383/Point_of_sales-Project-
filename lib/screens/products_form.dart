@@ -6,7 +6,9 @@ import 'package:pos_project/models/products.dart';
 import 'package:pos_project/widgets/buttons.dart';
 
 class InventoryManagement extends StatefulWidget {
-  const InventoryManagement({super.key});
+  const InventoryManagement({
+    super.key,
+  });
 
   @override
   State<InventoryManagement> createState() => _InventoryManagementState();
