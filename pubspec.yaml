@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.3.5
   image_picker: ^1.1.2
   animated_text_kit: ^4.2.2
+  fl_chart: ^0.70.2
   google_api_availability: ^5.0.0
 dev_dependencies:
   flutter_test:
