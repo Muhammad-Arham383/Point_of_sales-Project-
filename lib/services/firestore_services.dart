@@ -143,17 +143,26 @@ class FirestoreService {
         return Transactions(
           id: doc.id,
           title: data['title'] ?? '',
-          amount: data['amount'] ?? 0,
+          amount: (data['amount'] as num?)?.toDouble() ?? 0,
           quantity: data['quantity'] ?? 0,
-          date: data['date'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(data['date']) // ✅ Fix
-              : DateTime
-                  .now(), // Default value if null ✅ Firestore date handling
+          date: _convertToDateTime(data['date']), // ✅ Fix
         );
       }).toList();
     } catch (e) {
       print("Error fetching transactions: $e");
       return [];
+    }
+  }
+
+// ✅ Helper function to safely convert Firestore date values
+  DateTime _convertToDateTime(dynamic date) {
+    if (date is Timestamp) {
+      return date.toDate(); // Convert Firestore Timestamp to DateTime
+    } else if (date is int) {
+      return DateTime.fromMillisecondsSinceEpoch(
+          date); // Convert int to DateTime
+    } else {
+      return DateTime.now(); // Default value
     }
   }
 
@@ -180,68 +189,13 @@ class FirestoreService {
           title: data['title'] ?? '',
           amount: (data['amount'] as num?)?.toDouble() ?? 0,
           quantity: data['quantity'] ?? 0,
-          date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          date: _convertToDateTime(data['date']),
         );
       }).toList();
     } catch (e) {
       print("Error fetching transactions: $e");
       return [];
     }
-  }
-
-  Future<List<Transactions>> fetchWeeklyTransactions(
-      DateTime date, String uid) async {
-    DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
-    DateTime endOfWeek = startOfWeek.add(Duration(days: 7));
-
-    QuerySnapshot querySnapshot = await userCollection
-        .doc(uid)
-        .collection(transactionCollections)
-        .where('date',
-            isGreaterThanOrEqualTo: startOfWeek.millisecondsSinceEpoch)
-        .where('date', isLessThan: endOfWeek.millisecondsSinceEpoch)
-        .get();
-
-    return querySnapshot.docs.map((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-
-      return Transactions(
-        id: doc.id,
-        title: data['title'] ?? '',
-        amount: data['amount'] ?? 0,
-        quantity: data['quantity'] ?? 0,
-        date: data['date'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data['date']) // ✅ Fix
-            : DateTime.now(), // Default value if null ✅ Firestore date handling
-      );
-    }).toList();
-  }
-
-  Future<List<Transactions>> fetchMonthlyTransactions(
-      DateTime date, String uid) async {
-    DateTime startOfMonth = DateTime(date.year, date.month, 1);
-    DateTime endOfMonth = DateTime(date.year, date.month + 1, 1);
-
-    QuerySnapshot querySnapshot = await userCollection
-        .doc(uid)
-        .collection(transactionCollections)
-        .where('date', isGreaterThanOrEqualTo: startOfMonth)
-        .where('date', isLessThan: endOfMonth)
-        .get();
-
-    return querySnapshot.docs.map((doc) {
-      var data = doc.data() as Map<String, dynamic>;
-
-      return Transactions(
-        id: doc.id,
-        title: data['title'] ?? '',
-        amount: data['amount'] ?? 0,
-        quantity: data['quantity'] ?? 0,
-        date: data['date'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data['date']) // ✅ Fix
-            : DateTime.now(), // Default value if null ✅ Firestore date handling
-      );
-    }).toList();
   }
 
   Future<Products?> fetchProductByName(String productName, String uid) async {

@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
 import 'package:pos_project/bloc/bloc/sales_bloc.dart';
+import 'package:pos_project/bloc/bloc/sales_event.dart';
 import 'package:pos_project/bloc/bloc/sales_state.dart';
 import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/inventory.dart';
+
 import 'package:pos_project/screens/sales_screen.dart';
 // import 'package:pos_project/screens/sales_report.dart';
 import 'package:pos_project/widgets/image_picker_circle_avatar.dart';
@@ -17,6 +20,16 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  @override
+  void initState() {
+    super.initState();
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    context.read<ReportBloc>().add(FetchDailyReport(uid));
+    context.read<ReportBloc>().add(FetchWeeklyReport(uid));
+    context.read<ReportBloc>().add(FetchMonthlyReport(uid));
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -120,11 +133,81 @@ class _DashboardState extends State<Dashboard> {
             if (state is ReportLoading) {
               return const CircularProgressIndicator();
             } else if (state is ReportLoaded) {
-              return Column(
+              return ListView(
                 children: [
-                  Text('Daily Sales: ${state.totalAmount}'),
-                  Text('Weekly Sales: ${state.totalAmount}'),
-                  Text('Monthly Sales: ${state.totalAmount}'),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(5, 5),
+                              blurRadius: 7),
+                          BoxShadow(
+                              color: Colors.lightBlue,
+                              offset: Offset(-8, -8),
+                              blurRadius: 20),
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        color: Color.fromARGB(255, 3, 209, 255),
+                      ),
+                      padding: EdgeInsets.all(9),
+                      width: width * 0.4,
+                      height: height * 0.4,
+                      child: Center(
+                          child: Text('Daily Sales: ${state.totalAmount}')),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(5, 5),
+                              blurRadius: 7),
+                          BoxShadow(
+                              color: Colors.lightBlue,
+                              offset: Offset(-8, -8),
+                              blurRadius: 20),
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        color: Color.fromARGB(255, 3, 209, 255),
+                      ),
+                      padding: EdgeInsets.all(9),
+                      width: width * 0.4,
+                      height: height * 0.4,
+                      child: Center(
+                        child: Text('Weekly Sales: ${state.totalAmount}'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(5, 5),
+                              blurRadius: 7),
+                          BoxShadow(
+                              color: Colors.lightBlue,
+                              offset: Offset(-8, -8),
+                              blurRadius: 20),
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        color: Color.fromARGB(255, 3, 209, 255),
+                      ),
+                      padding: EdgeInsets.all(9),
+                      width: width * 0.4,
+                      height: height * 0.4,
+                      child: Center(
+                          child: Text('Monthly Sales: ${state.totalAmount}')),
+                    ),
+                  ),
                 ],
               );
             } else if (state is ReportError) {
