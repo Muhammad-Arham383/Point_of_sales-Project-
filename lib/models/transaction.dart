@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Transactions {
@@ -9,12 +7,14 @@ class Transactions {
   final double amount;
   final int quantity;
   final DateTime date;
-  Transactions(
-      {required this.id,
-      required this.title,
-      required this.amount,
-      required this.date,
-      required this.quantity});
+
+  Transactions({
+    required this.id,
+    required this.title,
+    required this.amount,
+    required this.date,
+    required this.quantity,
+  });
 
   Transactions copyWith({
     String? id,
@@ -24,31 +24,34 @@ class Transactions {
     int? quantity,
   }) {
     return Transactions(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        amount: amount ?? this.amount,
-        date: date ?? this.date,
-        quantity: quantity ?? this.quantity);
+      id: id ?? this.id,
+      title: title ?? this.title,
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+      quantity: quantity ?? this.quantity,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
+    return {
       'id': id,
       'title': title,
       'amount': amount,
-      'date': date.millisecondsSinceEpoch,
-      'quantity': quantity
+      'date':
+          Timestamp.fromDate(date), // 🔥 Store DateTime as Firestore Timestamp
+      'quantity': quantity,
     };
-    return map;
   }
 
   factory Transactions.fromMap(Map<String, dynamic> map) {
     return Transactions(
       id: map['id'] as String,
       title: map['title'] as String,
-      amount: map['amount'] as double,
+      amount: (map['amount'] as num).toDouble(),
       quantity: map['quantity'] as int,
-      date: DateTime.fromMillisecondsSinceEpoch(map['date']),
+      date: (map['date'] is Timestamp)
+          ? (map['date'] as Timestamp).toDate()
+          : DateTime.fromMillisecondsSinceEpoch(map['date']),
     );
   }
 
@@ -57,9 +60,19 @@ class Transactions {
   factory Transactions.fromJson(String source) =>
       Transactions.fromMap(json.decode(source) as Map<String, dynamic>);
 
+  static Transactions fromFirestore(QueryDocumentSnapshot<Object?> doc) {
+    return Transactions(
+      id: doc.id,
+      title: doc['title'] as String,
+      amount: (doc['amount'] as num).toDouble(),
+      quantity: doc['quantity'] as int,
+      date: (doc['date'] as Timestamp).toDate(),
+    );
+  }
+
   @override
   String toString() {
-    return 'Transactions(id: $id, title: $title, amount: $amount, date: $date)';
+    return 'Transactions(id: $id, title: $title, amount: $amount, date: $date, quantity: $quantity)';
   }
 
   @override
@@ -69,23 +82,16 @@ class Transactions {
     return other.id == id &&
         other.title == title &&
         other.amount == amount &&
-        other.date == date;
+        other.date == date &&
+        other.quantity == quantity;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ title.hashCode ^ amount.hashCode ^ date.hashCode;
-  }
-
-  static Future<List<Transactions>> fromFirestore(
-      QueryDocumentSnapshot<Object?> doc) {
-    return Future.value([
-      Transactions(
-          id: doc.id,
-          title: doc['title'] as String,
-          amount: doc['amount'] as double,
-          date: doc['date'],
-          quantity: doc['quantity'] as int),
-    ]);
+    return id.hashCode ^
+        title.hashCode ^
+        amount.hashCode ^
+        date.hashCode ^
+        quantity.hashCode;
   }
 }

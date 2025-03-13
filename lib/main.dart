@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pos_project/bloc/auth_bloc_bloc.dart';
 import 'package:pos_project/bloc/bloc/cart_bloc.dart';
 import 'package:pos_project/bloc/bloc/inventory_bloc.dart';
+import 'package:pos_project/bloc/bloc/sales_bloc.dart';
 import 'package:pos_project/bloc/bloc/user_data_bloc.dart';
 import 'package:pos_project/screens/sign_up_screen.dart';
 import 'package:pos_project/services/firestore_services.dart';
@@ -38,9 +39,11 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 UserDataBloc(firestoreService: firestoreService)),
         BlocProvider(
-            create: (context) => CartBloc(
-                firestoreService: firestoreService,
-                inventoryBloc: context.read<InventoryBloc>()))
+          create: (context) => CartBloc(
+              firestoreService: firestoreService,
+              inventoryBloc: context.read<InventoryBloc>()),
+        ),
+        BlocProvider(create: (context) => ReportBloc(firestoreService))
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

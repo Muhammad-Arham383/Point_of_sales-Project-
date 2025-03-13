@@ -1,17 +1,15 @@
-// part of 'sales_bloc.dart';
+abstract class ReportState {}
 
-// @immutable
-// sealed class SalesState {}
+class ReportLoading extends ReportState {}
 
-// final class SalesInitialState extends SalesState {}
+class ReportLoaded extends ReportState {
+  final double totalAmount;
 
-// final class SalesLoadingState extends SalesState {}
+  ReportLoaded(this.totalAmount);
+}
 
-// class SalesProductLoaded extends SalesState {
+class ReportError extends ReportState {
+  final String message;
 
-// }
-
-// final class SalesErrorState extends SalesState {
-//   SalesErrorState({required this.errorMessage});
-//   final String errorMessage;
-// }
+  ReportError(this.message);
+}
