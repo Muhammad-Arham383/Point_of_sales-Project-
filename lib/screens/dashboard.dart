@@ -156,7 +156,7 @@ class _DashboardState extends State<Dashboard> {
                       width: width * 0.4,
                       height: height * 0.4,
                       child: Center(
-                          child: Text('Daily Sales: ${state.totalAmount}')),
+                          child: Text('Daily Sales: \$${state.totalAmount}')),
                     ),
                   ),
                   Padding(
@@ -180,7 +180,7 @@ class _DashboardState extends State<Dashboard> {
                       width: width * 0.4,
                       height: height * 0.4,
                       child: Center(
-                        child: Text('Weekly Sales: ${state.totalAmount}'),
+                        child: Text('Weekly Sales: \$${state.totalAmount}'),
                       ),
                     ),
                   ),

@@ -32,7 +32,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       try {
         DateTime today = DateTime.now();
         DateTime start = today.subtract(Duration(days: today.weekday - 1));
-        DateTime end = start.add(Duration(days: 7));
+        DateTime end = start.add(const Duration(days: 7));
 
         List<Transactions> transactions = await firestoreService
             .fetchTransactionsByDateRange(start, end, event.uid);
