@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
       }
     } catch (e) {
-      print('Error fetching user: ${e.toString()}');
+      Text('Error fetching user: ${e.toString()}');
     }
   }
 
