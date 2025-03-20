@@ -13,7 +13,7 @@ class UserDataBloc extends Bloc<UserDataEvent, UserDataState> {
       print("Fetching user data for UID: ${event.uid}");
       try {
         final userData = await firestoreService.getUserData(event.uid);
-        final userName = userData['name'] as String;
+        final userName = userData!['name'] as String;
         emit(UserDataLoadedState(userName: userName));
       } catch (e) {
         print('Error fetching user: ${e.toString()}');

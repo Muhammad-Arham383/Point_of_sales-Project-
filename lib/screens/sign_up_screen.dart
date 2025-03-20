@@ -19,19 +19,36 @@ class SignUpScreen extends StatelessWidget {
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _nameController = TextEditingController();
 
+    // void signUpUser() {
+    //   context.read<AuthBlocBloc>().add(SignUpRequestEvent(
+    //       name: _nameController.text,
+    //       email: _emailController.text,
+    //       password: _passwordController.text));
+    //   try {
+    //     final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    //     if (uid.isNotEmpty) {
+    //       context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
+    //     }
+    //   } catch (e) {
+    //     Text('Error fetching user: ${e.toString()}');
+    //   }
+    // }
+
     void signUpUser() {
       context.read<AuthBlocBloc>().add(SignUpRequestEvent(
           name: _nameController.text,
           email: _emailController.text,
           password: _passwordController.text));
-      try {
-        final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-        if (uid.isNotEmpty) {
-          context.read<UserDataBloc>().add(FetchUserDataEvent(uid: uid));
+
+      // Wait for authentication to complete
+      FirebaseAuth.instance.authStateChanges().listen((user) {
+        if (user != null) {
+          print("User signed up successfully: ${user.uid}");
+          context.read<UserDataBloc>().add(FetchUserDataEvent(uid: user.uid));
+        } else {
+          print("Waiting for authentication...");
         }
-      } catch (e) {
-        Text('Error fetching user: ${e.toString()}');
-      }
+      });
     }
 
     return BlocBuilder<AuthBlocBloc, AuthBlocState>(

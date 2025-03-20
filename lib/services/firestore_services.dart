@@ -27,13 +27,13 @@ class FirestoreService {
     }
   }
 
-  Future<Map<String, dynamic>> getUserData(String uid) async {
+  Future<Map<String, dynamic>?> getUserData(String uid) async {
     try {
       final userDocument = await userCollection.doc(uid).get();
       if (userDocument.exists) {
         return userDocument.data()!;
       } else {
-        throw Exception('user not found');
+        return null;
       }
     } catch (e) {
       throw Exception('error fetching user data $e');
